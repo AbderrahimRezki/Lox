@@ -80,7 +80,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
                 return left >= right
 
             case _:                         
-                sys.stderr.write("Not Implemented")
+               raise NotImplementedError(f"Operator type <{operator.type}> not implemented.") 
 
     def visit_conditional_expr(self, expr: Conditional):
         condition = self.eval(expr.condition)
@@ -108,7 +108,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
                 return -right
 
             case _:
-                sys.stderr.write("Not implemented")
+                raise NotImplementedError(f"Operator <{expr.operator.type}> not implemented.")
 
     def visit_variable_expr(self, expr: Variable):
         return self.environment.get(expr.name)
