@@ -1,0 +1,53 @@
+#!/usr/bin/python
+import sys
+from scanner import Scanner
+from parser import Parser
+from interpreter import Interpreter
+from stmt.stmt import Stmt
+from expr.visitor import AstPrinter
+from errors import Error
+from typing import List
+
+class Lox:
+    @staticmethod
+    def run_file(path):
+        with open(path, "r") as f:
+            Lox.run(f.read())
+
+            if Error.had_error: exit(65)
+            if Error.had_runtime_error: exit(70)
+
+    @staticmethod
+    def run_prompt():
+        while True:
+            try:
+                line = input("> ")
+                Lox.run(line)
+                Error.had_error = False
+                Error.had_runtime_error = False
+            except EOFError:
+                break
+
+    @staticmethod
+    def run(source):
+        scanner = Scanner(source)
+        tokens = scanner.scan_tokens()
+
+        parser = Parser(tokens)
+        statements: List[Stmt] = parser.parse()
+
+        if Error.had_error: return
+
+        interpreter = Interpreter()
+        interpreter.interpret(statements)
+
+if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        print("Usage: lox [filename]")
+        exit(64)
+    elif (len(sys.argv) == 2):
+        Lox.run_file(sys.argv[1])
+    else:
+        Lox.run_prompt()
+    
+

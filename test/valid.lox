@@ -1,0 +1,16 @@
+/* This is a sample lox program
+ * Use this if you want to test 
+ * this interpreter
+ */
+
+1 + 1 == 2 ;// This is also a comment
+1 + 9 * 2;
+
+print 1 + 9 * 2;
+print "one";
+print true;
+print 2 + 1;
+
+var a = 1;
+
+print a;
