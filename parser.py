@@ -64,7 +64,7 @@ class Parser:
 
 
     def comma(self) -> Binary:
-        expr = self.equality()
+        expr = self.assignment()
 
         if self.match(TokenType.COMMA):
             operator = self.previous()
@@ -72,7 +72,20 @@ class Parser:
             expr = Binary(expr, operator, right)
 
         return expr
-        
+
+    def assignment(self) -> Assign:
+        expr = self.equality()
+
+        if self.match(TokenType.EQUAL):
+            equals = self.previous()
+            value = self.assignment()
+
+            if isinstance(expr, Variable):
+                return Assign(expr.name, value)
+            
+            Error.error(equals, "Invalid assignment target.")
+
+        return expr
 
     def equality(self) -> Binary:
         expr = self.comparaison()

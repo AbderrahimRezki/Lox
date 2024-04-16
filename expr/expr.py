@@ -20,10 +20,13 @@ class ExprVisitor:
 	@abstractmethod
 	def visit_variable(self, name): pass
 
+	@abstractmethod
+	def visit_assign_expr(self, name): pass
+
 
 class Expr:
-	def accept(self, visitor: ExprVisitor):
-		return visitor.visit(self)
+	def accept(self, visitor: ExprVisitor): pass
+
 
 class Conditional(Expr):
 	def __init__(self, condition: Expr, then_branch: Expr, else_branch: Expr):

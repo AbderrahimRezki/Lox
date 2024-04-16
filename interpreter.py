@@ -114,7 +114,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
         return self.environment.get(expr.name)
 
     def visit_assign_expr(self, expr: Assign):
-        return self.environment.assign(expr.name, expr.value)
+        return self.environment.assign(expr.name, self.eval(expr.value))
 
     def check_number_operand(self, operator: Token, operand):
         if not isinstance(operand, float):
@@ -129,7 +129,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
         return not not obj
 
     def eval(self, expr: Expr):
-        return expr.accept(self)
+        if expr is not None: return expr.accept(self)
 
     def interpret(self, statements: List[Stmt]):
         try:
