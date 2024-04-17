@@ -3,8 +3,8 @@ import sys
 from scanner import Scanner
 from parser import Parser
 from interpreter import Interpreter
-from stmt.stmt import Stmt
-from expr.visitor import AstPrinter
+from stmt import Stmt
+from printer import AstPrinter
 from errors import Error
 from typing import List
 

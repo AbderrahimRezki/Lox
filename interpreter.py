@@ -1,5 +1,5 @@
-from expr.expr import *
-from stmt.stmt import *
+from expr import *
+from stmt import *
 from environment import EnvironmentSingleton
 from lox_token import Token, TokenType
 from errors import Error, LoxRuntimeError

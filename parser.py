@@ -1,9 +1,9 @@
 from lox_token import Token, TokenType
 from errors import Error
-from expr.expr import *
-from stmt.stmt import *
+from expr import *
+from stmt import *
 from typing import List
-from expr.visitor import AstPrinter
+from printer import AstPrinter
 
 class Parser:
     def __init__(self, tokens: List[Token]):
