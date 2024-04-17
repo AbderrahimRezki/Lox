@@ -6,10 +6,8 @@ class Environment:
         self.__values = dict()
 
     def get(self, name: Token) -> object:
-        obj = self.__values.get(name.lexeme, None)
-
-        if obj is not None: 
-            return obj
+        if name.lexeme in self.__values:
+            return self.__values[name.lexeme]
 
         raise LoxRuntimeError(name, f"Undefined variable '{name.lexeme}'.")
 

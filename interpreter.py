@@ -6,6 +6,8 @@ from errors import Error, LoxRuntimeError
 from typing import List
 import sys
 
+# TODO: support nested assignment
+
 class Interpreter(StmtVisitor, ExprVisitor):
     def __init__(self):
         self.environment = EnvironmentSingleton.get_env()
@@ -14,7 +16,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
         self.eval(stmt.expression)
 
     def visit_print_stmt(self, stmt: Print):
-        value = str(self.eval(stmt.expression))
+        value = self.stringify(self.eval(stmt.expression))
         sys.stdout.write(value + "\n")
 
     def visit_declaration_stmt(self, stmt: Var):
@@ -128,8 +130,18 @@ class Interpreter(StmtVisitor, ExprVisitor):
         # Keeping python's truthiness
         return not not obj
 
+    def stringify(self, value):
+        if value is None: return "nil"
+
+        if isinstance(value, float):
+            value_as_str = str(value)
+            if value_as_str.endswith(".0"):
+                return value_as_str[:-2]
+
+        return str(value)
+
     def eval(self, expr: Expr):
-        if expr is not None: return expr.accept(self)
+        return expr.accept(self)
 
     def interpret(self, statements: List[Stmt]):
         try:
