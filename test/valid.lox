@@ -12,10 +12,29 @@ print true;
 print 2 + 1;
 
 var a = 1;
-// var b = 3;
-// b = a = 2;
+var b = 3;
+b = a = 2;
 
 print a = 3;
-//print b;
+print b;
+
+a = "global a";
+b = "global b";
+var c = "global c";
+{
+    var a = "outer a";
+    var b = "outer b";
+    {
+        var a = "inner a";
+        print a;
+        print b;
+        print c;
+    }
+    print a;
+    print b;
+    print c;
+}
 
 print a;
+print b;
+print c;

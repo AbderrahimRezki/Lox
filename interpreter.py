@@ -1,6 +1,6 @@
 from expr import *
 from stmt import *
-from environment import EnvironmentSingleton
+from environment import EnvironmentSingleton, Environment
 from lox_token import Token, TokenType
 from errors import Error, LoxRuntimeError
 from typing import List
@@ -18,6 +18,9 @@ class Interpreter(StmtVisitor, ExprVisitor):
     def visit_print_stmt(self, stmt: Print):
         value = self.stringify(self.eval(stmt.expression))
         sys.stdout.write(value + "\n")
+
+    def visit_block_stmt(self, stmt: Block):
+        self.execute_block(stmt.statements, Environment(self.environment))
 
     def visit_declaration_stmt(self, stmt: Var):
         value = None
@@ -154,3 +157,15 @@ class Interpreter(StmtVisitor, ExprVisitor):
 
     def execute(self, stmt: Stmt):
         stmt.accept(self)
+
+    def execute_block(self, statements: List[Stmt], environment: Environment):
+        previous = self.environment
+
+        try:
+            self.environment = environment
+
+            for statement in statements:
+                self.execute(stmt=statement)
+
+        finally:
+            self.environment = previous

@@ -18,7 +18,6 @@ class Parser:
 
         return statements
 
-    
     def declaration(self):
         if self.match(TokenType.VAR): return self.var_declaration()
         return self.statement()
@@ -35,12 +34,22 @@ class Parser:
 
     def statement(self):
         if self.match(TokenType.PRINT): return self.print_statement()
+        if self.match(TokenType.LEFT_BRACE): return Block(self.block_statement())
         return self.expression_statement()
 
     def print_statement(self):
         value = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
         return Print(value)
+
+    def block_statement(self):
+        statements: List[Stmt] = []
+
+        while not self.is_at_end() and not self.check(TokenType.RIGHT_BRACE):
+            statements.append(self.declaration())
+
+        self.consume(TokenType.RIGHT_BRACE, "Expect '}' at the end of block.")
+        return statements
 
     def expression_statement(self):
         value = self.expression()
@@ -55,7 +64,7 @@ class Parser:
 
         if self.match(TokenType.QUESTION):
             then_branch = self.expression()
-            self.consume(TokenType.COLON, "Expected : after expression.")
+            self.consume(TokenType.COLON, "Expected ':' after expression.")
             else_branch = self.conditional()
 
             expr = Conditional(expr, then_branch, else_branch)

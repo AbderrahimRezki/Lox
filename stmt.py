@@ -1,6 +1,7 @@
 from expr import Expr
 from lox_token import Token
 from abc import abstractmethod
+from typing import List
 
 class StmtVisitor:
     @abstractmethod
@@ -30,6 +31,13 @@ class Print(Stmt):
 
     def accept(self, visitor: StmtVisitor):
         return visitor.visit_print_stmt(self)
+
+class Block(Stmt):
+    def __init__(self, statements: List[Stmt]):
+        self.statements = statements
+
+    def accept(self, visitor: StmtVisitor):
+        return visitor.visit_block_stmt(self)
 
 class Var(Stmt):
     def __init__(self, name: Token, initializer: Expr):

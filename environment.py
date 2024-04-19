@@ -2,12 +2,16 @@ from lox_token import Token
 from errors import LoxRuntimeError
 
 class Environment:
-    def __init__(self):
+    def __init__(self, enclosing = None):
+        self.__enclosing = enclosing
         self.__values = dict()
 
     def get(self, name: Token) -> object:
         if name.lexeme in self.__values:
             return self.__values[name.lexeme]
+
+        if self.__enclosing is not None:
+            return self.__enclosing.get(name)
 
         raise LoxRuntimeError(name, 
             f"Undefined variable '{name.lexeme}'.")
@@ -19,6 +23,9 @@ class Environment:
         if name.lexeme in self.__values:
             self.__values[name.lexeme] = value
             return value
+
+        if self.__enclosing is not None:
+            return self.__enclosing.assign(name, value)
 
         raise LoxRuntimeError(name, f"Undefined variable '{name.lexeme}'.")
 
