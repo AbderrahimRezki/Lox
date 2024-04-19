@@ -27,4 +27,4 @@ class AstPrinter(ExprVisitor):
     def print(self, expr):
         if isinstance(expr, Expr):
             return expr.accept(self)
-        print("Not an expresssion")
+        raise TypeError(f"<{expr}> is not an expresssion")

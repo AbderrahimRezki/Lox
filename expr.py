@@ -25,7 +25,7 @@ class ExprVisitor:
 
 
 class Expr:
-	def accept(self, visitor: ExprVisitor): pass
+	def accept(self, visitor: ExprVisitor) -> object: pass
 
 
 class Conditional(Expr):
@@ -81,6 +81,6 @@ class Assign(Expr):
 	def __init__(self, name: Token, value: Expr):
 		self.name = name
 		self.value = value
-
+	
 	def accept(self, visitor: ExprVisitor):
-		visitor.visit_assign_expr(self)
+		return visitor.visit_assign_expr(self)

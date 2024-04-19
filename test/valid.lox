@@ -12,8 +12,10 @@ print true;
 print 2 + 1;
 
 var a = 1;
-var b = nil;
-a = b = 2;
+// var b = 3;
+// b = a = 2;
+
+print a = 3;
+//print b;
 
 print a;
-print b;

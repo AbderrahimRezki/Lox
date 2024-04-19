@@ -116,7 +116,9 @@ class Interpreter(StmtVisitor, ExprVisitor):
         return self.environment.get(expr.name)
 
     def visit_assign_expr(self, expr: Assign):
-        return self.environment.assign(expr.name, self.eval(expr.value))
+        value = self.eval(expr.value)
+        self.environment.assign(expr.name, value)
+        return value 
 
     def check_number_operand(self, operator: Token, operand):
         if not isinstance(operand, float):
