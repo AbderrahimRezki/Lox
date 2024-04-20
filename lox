@@ -21,8 +21,21 @@ class Lox:
     def run_prompt():
         while True:
             try:
-                line = input("> ")
-                Lox.run(line)
+                line = input(">>> ")
+
+                scanner = Scanner(line)
+                tokens = scanner.scan_tokens()
+
+                parser = Parser(tokens)
+                interpreter = Interpreter()
+
+                try:
+                    expression = parser.expression()
+                    print(interpreter.eval(expression))
+                except:
+                    statements = parser.parse()
+                    interpreter.interpret(statements)
+ 
                 Error.had_error = False
                 Error.had_runtime_error = False
             except EOFError:
