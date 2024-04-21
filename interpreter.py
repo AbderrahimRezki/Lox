@@ -6,7 +6,7 @@ from errors import Error, LoxRuntimeError
 from typing import List
 import sys
 
-# TODO: support nested assignment
+from printer import AstPrinter
 
 class Interpreter(StmtVisitor, ExprVisitor):
     def __init__(self):
@@ -16,7 +16,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
         self.eval(stmt.expression)
 
     def visit_if_stmt(self, stmt: If):
-        if self.eval(stmt.condition):
+        if self.is_truthy(self.eval(stmt.condition)):
             self.execute(stmt.then_branch)
         elif stmt.else_branch is not None:
             self.execute(stmt.else_branch)
@@ -107,6 +107,18 @@ class Interpreter(StmtVisitor, ExprVisitor):
     def visit_literal_expr(self, expr: Literal): 
         return expr.value
 
+    def visit_logical_expr(self, expr: Logical):
+        left = self.is_truthy(self.eval(expr.left))
+        operator = expr.operator
+
+        match(operator.type):
+            case TokenType.OR: 
+                if left == True: return True
+                return self.eval(expr.right)
+            case TokenType.AND:
+                if left == False: return False
+                return self.eval(expr.right)
+
     def visit_unary_expr(self, expr: Unary): 
         right = self.eval(expr.right)
 
@@ -144,7 +156,7 @@ class Interpreter(StmtVisitor, ExprVisitor):
     def stringify(self, value):
         if value is None: return "nil"
         if isinstance(value, bool): return str(value).lower()
-        
+
         if isinstance(value, float):
             value_as_str = str(value)
             if value_as_str.endswith(".0"):

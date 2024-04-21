@@ -45,3 +45,10 @@ var a = 1;
     var a = a + 2;
     print a;
 }
+
+
+if (1 ==2 or 3 == 3 and 0) {
+    print "This is true";
+} else {
+    print "This is false";
+}
