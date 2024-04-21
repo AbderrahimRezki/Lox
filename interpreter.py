@@ -15,6 +15,12 @@ class Interpreter(StmtVisitor, ExprVisitor):
     def visit_expression_stmt(self, stmt: Expression):
         self.eval(stmt.expression)
 
+    def visit_if_stmt(self, stmt: If):
+        if self.eval(stmt.condition):
+            self.execute(stmt.then_branch)
+        elif stmt.else_branch is not None:
+            self.execute(stmt.else_branch)
+
     def visit_print_stmt(self, stmt: Print):
         value = self.stringify(self.eval(stmt.expression))
         sys.stdout.write(value + "\n")
@@ -62,10 +68,10 @@ class Interpreter(StmtVisitor, ExprVisitor):
             case TokenType.COMMA:           
                 return right
 
-            case TokenType.EQUAL_EQUAL:     
+            case TokenType.EQUAL_EQUAL:    
                 return left == right
 
-            case TokenType.BANG_EQUAL:      
+            case TokenType.BANG_EQUAL:     
                 return left != right
 
             case TokenType.LESS:            

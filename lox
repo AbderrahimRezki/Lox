@@ -19,6 +19,7 @@ class Lox:
 
     @staticmethod
     def run_prompt():
+        interpreter = Interpreter()
         while True:
             try:
                 line = input(">>> ")
@@ -27,7 +28,6 @@ class Lox:
                 tokens = scanner.scan_tokens()
 
                 parser = Parser(tokens)
-                interpreter = Interpreter()
 
                 try:
                     expression = parser.expression()

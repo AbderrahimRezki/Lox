@@ -1,7 +1,7 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from lox_token import Token
 
-class ExprVisitor:
+class ExprVisitor(ABC):
 	@abstractmethod
 	def visit_conditional_expr(self, expr): pass
 	
@@ -18,7 +18,7 @@ class ExprVisitor:
 	def visit_unary_expr(self, expr): pass
 	
 	@abstractmethod
-	def visit_variable(self, name): pass
+	def visit_variable_expr(self, name): pass
 
 	@abstractmethod
 	def visit_assign_expr(self, name): pass

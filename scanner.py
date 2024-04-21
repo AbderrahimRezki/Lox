@@ -54,7 +54,7 @@ class Scanner:
             case ',': self.add_token(TokenType.COMMA)
             case '.': self.add_token(TokenType.DOT)
             case '?': self.add_token(TokenType.QUESTION)
-            case '!': self.add_token(TokenType.EQUAL_EQUAL if self.match('=') else TokenType.BANG)
+            case '!': self.add_token(TokenType.BANG_EQUAL if self.match('=') else TokenType.BANG)
             case '=': self.add_token(TokenType.EQUAL_EQUAL if self.match('=') else TokenType.EQUAL)
             case '<': self.add_token(TokenType.LESS_EQUAL if self.match('=') else TokenType.LESS)
             case '>': self.add_token(TokenType.GREATER_EQUAL if self.match('=') else TokenType.GREATER)
