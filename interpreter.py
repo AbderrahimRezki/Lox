@@ -143,7 +143,8 @@ class Interpreter(StmtVisitor, ExprVisitor):
 
     def stringify(self, value):
         if value is None: return "nil"
-
+        if isinstance(value, bool): return str(value).lower()
+        
         if isinstance(value, float):
             value_as_str = str(value)
             if value_as_str.endswith(".0"):
