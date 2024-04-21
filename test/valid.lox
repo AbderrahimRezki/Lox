@@ -52,3 +52,10 @@ if (1 ==2 or 3 == 3 and 0) {
 } else {
     print "This is false";
 }
+
+var i = 0;
+
+while (i < 10) {
+    print i;
+    i = i + 1;
+}

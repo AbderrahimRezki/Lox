@@ -36,6 +36,10 @@ class Interpreter(StmtVisitor, ExprVisitor):
 
         self.environment.define(stmt.name, value)
 
+    def visit_while_stmt(self, stmt: While):
+        while self.is_truthy(self.eval(stmt.condition)):
+            self.execute(stmt.body)
+
     def visit_binary_expr(self, expr: Binary): 
         left = self.eval(expr.left)
         right = self.eval(expr.right)
