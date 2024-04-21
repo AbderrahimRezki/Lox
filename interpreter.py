@@ -115,13 +115,12 @@ class Interpreter(StmtVisitor, ExprVisitor):
         left = self.is_truthy(self.eval(expr.left))
         operator = expr.operator
 
-        match(operator.type):
-            case TokenType.OR: 
-                if left == True: return True
-                return self.eval(expr.right)
-            case TokenType.AND:
-                if left == False: return False
-                return self.eval(expr.right)
+        if operator.type == TokenType.OR: 
+            if left == True: return True
+        elif operator.type == TokenType.AND:
+            if left == False: return False
+
+        return self.eval(expr.right)
 
     def visit_unary_expr(self, expr: Unary): 
         right = self.eval(expr.right)
