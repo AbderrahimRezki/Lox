@@ -63,3 +63,6 @@ while (i < 10) {
 for (var j = 0; j < 10; j = j+1) {
     print j;
 }
+print clock();
+
+printf(1 + 1);

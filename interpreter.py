@@ -2,6 +2,8 @@ from expr import *
 from stmt import *
 from environment import EnvironmentSingleton, Environment
 from lox_token import Token, TokenType
+from lox_callable import LoxCallable
+from native_functions import LoxClock, LoxPrint
 from errors import Error, LoxRuntimeError
 from typing import List
 import sys
@@ -10,7 +12,11 @@ from printer import AstPrinter
 
 class Interpreter(StmtVisitor, ExprVisitor):
     def __init__(self):
-        self.environment = EnvironmentSingleton.get_env()
+        self.globals: Environment = EnvironmentSingleton.get_env()
+        self.environment: Environment = self.globals
+
+        self.globals.define(Token(TokenType.IDENTIFIER, "clock", None, 0), LoxClock())
+        self.globals.define(Token(TokenType.IDENTIFIER, "printf", None, 0), LoxPrint())
 
     def visit_expression_stmt(self, stmt: Expression):
         self.eval(stmt.expression)
@@ -96,6 +102,22 @@ class Interpreter(StmtVisitor, ExprVisitor):
 
             case _:                         
                raise NotImplementedError(f"Operator type <{operator.type}> not implemented.") 
+
+    def visit_call_expr(self, expr: Call):
+        callee: LoxCallable = self.eval(expr.callee)
+
+        if not isinstance(callee, LoxCallable):
+            raise LoxRuntimeError(expr.paren, "Can only call functions and classes")
+
+        arguments = []
+
+        for arg in expr.arguments:
+            arguments.append(self.eval(arg))
+
+        if len(arguments) != callee.arity():
+            raise LoxRuntimeError(expr.paren, f"Expected {callee.arity()} args but got {len(arguments)}.")
+
+        return callee.call(self, arguments)
 
     def visit_conditional_expr(self, expr: Conditional):
         condition = self.eval(expr.condition)
