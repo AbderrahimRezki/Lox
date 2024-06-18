@@ -29,7 +29,7 @@ class Parser:
         if self.match(TokenType.EQUAL): 
             initializer = self.expression()
 
-        self.consume(TokenType.SEMICOLON, "Expect ; variable declaration")
+        self.consume(TokenType.SEMICOLON, "Expect ; after variable declaration")
         return Var(name, initializer)
 
     def statement(self):

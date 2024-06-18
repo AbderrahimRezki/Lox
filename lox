@@ -31,8 +31,8 @@ class Lox:
 
                 try:
                     expression = parser.expression()
-                    print(interpreter.stringify(
-                        interpreter.eval(expression)))
+                    value = interpreter.eval(expression)
+                    print(interpreter.stringify(value))
                 except:
                     statements = parser.parse()
                     interpreter.interpret(statements)
