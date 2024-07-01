@@ -2,7 +2,7 @@ from expr import *
 from stmt import *
 from environment import EnvironmentSingleton, Environment
 from lox_token import Token, TokenType
-from lox_callable import LoxCallable
+from lox_callable import LoxCallable, LoxFunction
 from native_functions import LoxClock, LoxPrint
 from errors import Error, LoxRuntimeError
 from typing import List
@@ -20,6 +20,10 @@ class Interpreter(StmtVisitor, ExprVisitor):
 
     def visit_expression_stmt(self, stmt: Expression):
         self.eval(stmt.expression)
+
+    def visit_function_stmt(self, stmt: Function):
+        function = LoxFunction(stmt)
+        self.environment.define(stmt.name, function)
 
     def visit_if_stmt(self, stmt: If):
         if self.is_truthy(self.eval(stmt.condition)):

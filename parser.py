@@ -20,6 +20,7 @@ class Parser:
 
     def declaration(self):
         if self.match(TokenType.VAR): return self.var_declaration()
+        if self.match(TokenType.FUN): return self.fun_declaration()
         return self.statement()
 
     def var_declaration(self):
@@ -31,6 +32,31 @@ class Parser:
 
         self.consume(TokenType.SEMICOLON, "Expect ; after variable declaration")
         return Var(name, initializer)
+
+    def fun_declaration(self):
+        return self.function()
+
+    def function(self, kind="function"):
+        name = self.consume(TokenType.IDENTIFIER, f"Expect {kind} name.")
+        self.consume(TokenType.LEFT_PAREN, f"Expect '(' after {kind} name.")
+
+        parameters: List[Token] = []
+
+        if not self.check(TokenType.RIGHT_PAREN):
+            parameters.append(self.consume(TokenType.IDENTIFIER, "Expect parameter name."))
+
+            while self.match(TokenType.COMMA):
+                if len(parameters) >= 255:
+                    self.error(self.peek(), "Can't have more than 255 parameters.")
+
+                parameters.append(self.consume(TokenType.IDENTIFIER, "Expect parameter name."))
+
+        self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.")
+        self.consume(TokenType.LEFT_BRACE, f"Expect '{{' before {kind} body.")
+        
+        body = self.block_statement()
+
+        return Function(name, parameters, body)
 
     def statement(self):
         if self.match(TokenType.IF): return self.if_statement()
@@ -124,7 +150,7 @@ class Parser:
         return self.conditional()
 
     def conditional(self) -> Conditional:
-        expr = self.comma()
+        expr = self.assignment()
 
         if self.match(TokenType.QUESTION):
             then_branch = self.expression()
@@ -244,7 +270,7 @@ class Parser:
     def finish_call(self, expr):
         arguments = []
         if not self.check(TokenType.RIGHT_PAREN):
-            arguments.append(self.expression())
+            arguments.append(self.assignment())
 
             while self.match(TokenType.COMMA):
                 if len(arguments) >= 255:

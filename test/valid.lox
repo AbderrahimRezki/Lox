@@ -66,3 +66,11 @@ for (var j = 0; j < 10; j = j+1) {
 print clock();
 
 printf(1 + 1);
+
+fun add(a, b, c) {
+    print a + b + c;
+}
+
+print add;
+
+add(1, 2, 3);
